@@ -7,9 +7,9 @@ bittrex.options({
 });
 
 
-const getBalance = () => {
+const getBalance = (currencySymbol) => {
     return new Promise((resolve, reject) => {
-        bittrex.getbalance({ currency: 'BTC' }, (error, data) => {
+        bittrex.getbalance({ currency: currencySymbol }, (error, data) => {
             if (error) {
                 reject(error);
             } else {

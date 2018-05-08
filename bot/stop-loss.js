@@ -98,16 +98,18 @@ const runBittrex = () => {
   if (config.stoploss.bittrex.enabled === true) {
     config.stoploss.bittrex.assets.map((asset) => {
       const assetData = asset;
-      cc.getPrice(asset.symbol, 'EUR', 'CCAGG').then((data) => {
+      cc.getPrice(asset.symbol, 'USD', 'CCAGG').then((data) => {
+        console.log(data);
         const price = data;
-        if (price.EUR) {
-          const isBelowTarget = price.EUR < assetData.target;
+        if (price.USD) {
+          const isBelowTarget = price.USD < assetData.target;
           if (isBelowTarget) {
             console.log(`${assetData.symbol} is below target.`);
             if (balance === null) {
-              const balancePromise = kraken.getBalance();
+              const balancePromise = bittrex.getBalance(assetData.symbol);
               balancePromise.then((data) => {
-                sell(data[assetData.kraken], assetData.symbol, price.EUR, assetData.precision);
+                console.log(data);
+                //sell(data[assetData.kraken], assetData.symbol, price.EUR, assetData.precision);
               })
                 .catch(error => console.log(error));
             } else {

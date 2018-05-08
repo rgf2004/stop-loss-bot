@@ -12,8 +12,8 @@
   "dependencies": {
     "dotenv": "^4.0.0",
     "kraken-api": "^1.0.0",
+    "node-bittrex-api": "^0.8.3",
     "node-fetch": "^1.7.2",
-    "node.bittrex.api": "^1.0.0",
     "nodemailer": "^4.1.0"
   }
 }

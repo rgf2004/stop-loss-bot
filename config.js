@@ -11,7 +11,8 @@ const config = {
       "assets" : [
         {
           "symbol": "LTC",
-          "target": 150,
+          "target": 170,
+          "amount" : 1
         }
       ]
     },
