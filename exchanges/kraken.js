@@ -1,6 +1,6 @@
 const KrakenClient = require('kraken-api');
 
-const kraken = new KrakenClient(process.env.APIKey, process.env.APISign, {
+const kraken = new KrakenClient(process.env.KrakenAPIKey, process.env.KrakenAPISign, {
   timeout: process.env.Timeout || 50000,
 });
 

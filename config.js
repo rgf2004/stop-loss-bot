@@ -6,7 +6,18 @@ const config = {
   "stoploss": {
     "enabled": true,
     "strategy": "stop-loss", //Can be also trailing-stop
-    "assets": [{
+    "bittrex" : {
+      "enabled" : true,
+      "assets" : [
+        {
+          "symbol": "LTC",
+          "target": 150,
+        }
+      ]
+    },
+    "kraken" : {
+      "enabled" : false,
+      "assets": [{
         "symbol": "LTC",
         "kraken": "XLTC",
         "target": 150,
@@ -53,6 +64,7 @@ const config = {
         "target": 0,
       }
     ]
+    }    
   }
 };
 

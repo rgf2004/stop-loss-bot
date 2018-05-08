@@ -1,6 +1,7 @@
 const config = require('../config');
 const cc = require('../utils/cc');
 const kraken = require('../exchanges/kraken');
+const bittrex = require('../exchanges/bittrex');
 const email = require('../notifications/email');
 const balance = null;
 
@@ -48,11 +49,12 @@ const sell = (amount, symbol, price, precision = process.env.DefaultPrecision) =
     const sellPrice = Number(price).toFixed(precision) || price;
 
     if (process.env.Environment === 'production') {
-      kraken.placeOrder(`${symbol}EUR`, 'sell', 'market', sellPrice, amount).then((data) => {
-          if (data.descr) {
-            return data.descr;
-          }
-        })
+      //TODO just temp replce for bittrex
+      bittrex.placeOrder(`${symbol}EUR`, 'sell', 'market', sellPrice, amount).then((data) => {
+        if (data.descr) {
+          return data.descr;
+        }
+      })
         .catch(error => console.log(error));
     } else {
       console.log(`Selling ${symbol} by market price (${sellPrice}).`)
@@ -60,10 +62,11 @@ const sell = (amount, symbol, price, precision = process.env.DefaultPrecision) =
   }
 };
 
-const run = () => {
-  config.stoploss.assets.map((asset) => {
-    const assetData = asset;
-    cc.getPrice(asset.symbol, 'EUR', 'CCAGG').then((data) => {
+const runKraken = () => {
+  if (config.stoploss.kraken.enabled === true) {
+    config.stoploss.kraken.assets.map((asset) => {
+      const assetData = asset;
+      cc.getPrice(asset.symbol, 'EUR', 'CCAGG').then((data) => {
         const price = data;
         if (price.EUR) {
           const isBelowTarget = price.EUR < assetData.target;
@@ -72,8 +75,8 @@ const run = () => {
             if (balance === null) {
               const balancePromise = kraken.getBalance();
               balancePromise.then((data) => {
-                  sell(data[assetData.kraken], assetData.symbol, price.EUR, assetData.precision);
-                })
+                sell(data[assetData.kraken], assetData.symbol, price.EUR, assetData.precision);
+              })
                 .catch(error => console.log(error));
             } else {
               sell(balance[assetData.kraken], assetData.symbol, price.EUR);
@@ -86,8 +89,46 @@ const run = () => {
           console.log(`Something went wrong. Cannot get price for ${asset.symbol}`);
         }
       })
-      .catch(error => console.log(error));
-  });
+        .catch(error => console.log(error));
+    });
+  }
+};
+
+const runBittrex = () => {
+  if (config.stoploss.bittrex.enabled === true) {
+    config.stoploss.bittrex.assets.map((asset) => {
+      const assetData = asset;
+      cc.getPrice(asset.symbol, 'EUR', 'CCAGG').then((data) => {
+        const price = data;
+        if (price.EUR) {
+          const isBelowTarget = price.EUR < assetData.target;
+          if (isBelowTarget) {
+            console.log(`${assetData.symbol} is below target.`);
+            if (balance === null) {
+              const balancePromise = kraken.getBalance();
+              balancePromise.then((data) => {
+                sell(data[assetData.kraken], assetData.symbol, price.EUR, assetData.precision);
+              })
+                .catch(error => console.log(error));
+            } else {
+              sell(balance[assetData.kraken], assetData.symbol, price.EUR);
+            }
+          } else if ((Number(price.EUR).toFixed(2) * 1.05) < assetData.target) {
+            sendTargetNotify(assetData.symbol, price.EUR, assetData.target);
+          }
+
+        } else {
+          console.log(`Something went wrong. Cannot get price for ${asset.symbol}`);
+        }
+      })
+        .catch(error => console.log(error));
+    });
+  }
+}
+
+const run = () => {
+  runKraken();
+  runBittrex();
 };
 
 module.exports = {
