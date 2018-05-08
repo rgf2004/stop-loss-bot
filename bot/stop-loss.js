@@ -99,28 +99,27 @@ const runBittrex = () => {
     config.stoploss.bittrex.assets.map((asset) => {
       const assetData = asset;
       cc.getPrice(asset.symbol, 'USD', 'CCAGG').then((data) => {
-        console.log(data);
+        console.log(`current Price for ${asset.symbol} : ${data.USD}`);
         const price = data;
-        if (price.USD) {
-          const isBelowTarget = price.USD < assetData.target;
-          if (isBelowTarget) {
-            console.log(`${assetData.symbol} is below target.`);
-            if (balance === null) {
-              const balancePromise = bittrex.getBalance(assetData.symbol);
-              balancePromise.then((data) => {
-                console.log(data);
-                //sell(data[assetData.kraken], assetData.symbol, price.EUR, assetData.precision);
-              })
-                .catch(error => console.log(error));
-            } else {
-              sell(balance[assetData.kraken], assetData.symbol, price.EUR);
-            }
-          } else if ((Number(price.EUR).toFixed(2) * 1.05) < assetData.target) {
-            sendTargetNotify(assetData.symbol, price.EUR, assetData.target);
+        const stopLossTargetPrice = price.USD - (price.USD * (asset.percentage / 100));
+        if (!asset.stopLossTargetPrice) {
+          asset.stopLossTargetPrice = stopLossTargetPrice;
+          console.log(`${asset.symbol} - First time checking stop loss threshold has been initialized - ${asset.stopLossTargetPrice}`,);
+        }
+        else {
+          const stopLossNewTargetPrice = asset.stopLossTargetPrice + (asset.stopLossTargetPrice * (asset.percentage / 100));
+          if (price.USD <= asset.stopLossTargetPrice) {
+            console.log(`${asset.symbol} - Sell Order will be sumbitted - ${asset.stopLossTargetPrice}`);
+            // after sell place order buy with current price
           }
-
-        } else {
-          console.log(`Something went wrong. Cannot get price for ${asset.symbol}`);
+          else if (price.USD > stopLossNewTargetPrice) {            
+            asset.stopLossTargetPrice = stopLossNewTargetPrice;
+            console.log(`${asset.symbol} - New Stop loss threshold - ${asset.stopLossTargetPrice}`);
+          }
+          else {
+            // DO Nothing 
+            console.log(`${asset.symbol} - price ${price.USD} still under current Threshold - ${asset.stopLossTargetPrice}`);
+          }
         }
       })
         .catch(error => console.log(error));
