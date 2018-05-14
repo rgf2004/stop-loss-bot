@@ -11,7 +11,7 @@ const config = {
       "assets" : [
         {
           "symbol": "LTC",
-          "percentage": 0.01,
+          "percentage": 5,
           "amount" : 1
         }
       ]
