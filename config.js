@@ -25,7 +25,12 @@ const config = {
           "amount" : 1
         },
         {
-          "symbol": "LTC",
+          "symbol": "ETH",
+          "percentage": 5,
+          "amount" : 1
+        },
+        {
+          "symbol": "LSK",
           "percentage": 5,
           "amount" : 1
         }
