@@ -99,7 +99,7 @@ const runBittrex = () => {
     config.stoploss.bittrex.assets.map((asset) => {
       const assetData = asset;
       cc.getPrice(asset.symbol, 'USD', 'CCAGG').then((data) => {
-        console.log(`${asset.symbol} - mode ${asset.mode} - current Price for : ${data.USD}`);
+        // console.log(`${asset.symbol} - mode ${asset.mode} - current Price for : ${data.USD}`);
         const price = data;
         if (price.USD) {
           const newSellThreshold = cc.calculateSellValue(price.USD, asset.percentage); //price.USD - (price.USD * (asset.percentage / 100));
