@@ -122,10 +122,10 @@ const runBittrex = () => {
                 asset.sellThreshold = newSellThreshold;
                 console.log(`${asset.symbol} - New Stop loss threshold has been set - ${asset.sellThreshold}`);
               }
-              else {
-                // DO Nothing 
-                console.log(`${asset.symbol} - price ${price.USD} still over current Threshold - ${asset.sellThreshold}`);
-              }
+              // else {
+              //   // DO Nothing 
+              //   console.log(`${asset.symbol} - price ${price.USD} still over current Threshold - ${asset.sellThreshold}`);
+              // }
             }
           }
           else if (asset.mode === "buy") {
@@ -146,10 +146,10 @@ const runBittrex = () => {
                 asset.buyThreshold = newBuyThreshold;
                 console.log(`${asset.symbol} - New Buy threshold has been set - ${asset.buyThreshold}`);
               }
-              else {
-                // DO Nothing 
-                console.log(`${asset.symbol} - price ${price.USD} still under current Threshold - ${asset.buyThreshold}`);
-              }
+              // else {
+              //   // DO Nothing 
+              //   console.log(`${asset.symbol} - price ${price.USD} still under current Threshold - ${asset.buyThreshold}`);
+              // }
             }
           }
         }
