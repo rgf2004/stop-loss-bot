@@ -13,6 +13,21 @@ const config = {
           "symbol": "LTC",
           "percentage": 5,
           "amount" : 1
+        },
+        {
+          "symbol": "DASH",
+          "percentage": 5,
+          "amount" : 1
+        },
+        {
+          "symbol": "BTC",
+          "percentage": 5,
+          "amount" : 1
+        },
+        {
+          "symbol": "LTC",
+          "percentage": 5,
+          "amount" : 1
         }
       ]
     },
