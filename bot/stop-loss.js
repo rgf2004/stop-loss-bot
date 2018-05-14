@@ -99,26 +99,58 @@ const runBittrex = () => {
     config.stoploss.bittrex.assets.map((asset) => {
       const assetData = asset;
       cc.getPrice(asset.symbol, 'USD', 'CCAGG').then((data) => {
-        console.log(`current Price for ${asset.symbol} : ${data.USD}`);
+        console.log(`${asset.symbol} - mode ${asset.mode} - current Price for : ${data.USD}`);
         const price = data;
-        const stopLossTargetPrice = price.USD - (price.USD * (asset.percentage / 100));
-        if (!asset.stopLossTargetPrice) {
-          asset.stopLossTargetPrice = stopLossTargetPrice;
-          console.log(`${asset.symbol} - First time checking stop loss threshold has been initialized - ${asset.stopLossTargetPrice}`,);
-        }
-        else {
-          const stopLossNewTargetPrice = asset.stopLossTargetPrice + (asset.stopLossTargetPrice * (asset.percentage / 100));
-          if (price.USD <= asset.stopLossTargetPrice) {
-            console.log(`${asset.symbol} - Sell Order will be sumbitted - ${asset.stopLossTargetPrice}`);
-            // after sell place order buy with current price
+        if (price.USD) {
+          const newSellThreshold = cc.calculateSellValue(price.USD, asset.percentage); //price.USD - (price.USD * (asset.percentage / 100));
+          // First Time checking 
+          if (!asset.mode || asset.mode === "sell") {
+            asset.mode = "sell";
+            if (!asset.sellThreshold) {
+              asset.sellThreshold = newSellThreshold;
+              console.log(`${asset.symbol} - First time checking stop loss threshold has been initialized - ${asset.sellThreshold}`);
+            }
+            else {
+              if (price.USD <= asset.sellThreshold) {
+                console.log(`${asset.symbol} - Sell Order will be sumbitted - ${price.USD} - ######################################`);
+                // after sell place order buy with current price
+                console.log(`${asset.symbol} - order finished - ${price.USD}`);
+                delete asset.sellThreshold;
+                asset.mode = "buy";
+              }
+              else if (price.USD >= newSellThreshold && newSellThreshold > asset.sellThreshold) {
+                asset.sellThreshold = newSellThreshold;
+                console.log(`${asset.symbol} - New Stop loss threshold has been set - ${asset.sellThreshold}`);
+              }
+              else {
+                // DO Nothing 
+                console.log(`${asset.symbol} - price ${price.USD} still over current Threshold - ${asset.sellThreshold}`);
+              }
+            }
           }
-          else if (price.USD > stopLossNewTargetPrice) {            
-            asset.stopLossTargetPrice = stopLossNewTargetPrice;
-            console.log(`${asset.symbol} - New Stop loss threshold - ${asset.stopLossTargetPrice}`);
-          }
-          else {
-            // DO Nothing 
-            console.log(`${asset.symbol} - price ${price.USD} still under current Threshold - ${asset.stopLossTargetPrice}`);
+          else if (asset.mode === "buy") {
+            const newBuyThreshold = cc.calculateBuyValue(price.USD, asset.percentage); //price.USD - (price.USD * (asset.percentage / 100));
+            if (!asset.buyThreshold) {
+              asset.buyThreshold = newBuyThreshold;
+              console.log(`${asset.symbol} - First time checking buy threshold has been initialized - ${asset.buyThreshold}`);
+            }
+            else {
+              if (price.USD >= asset.buyThreshold) {
+                console.log(`${asset.symbol} - Buy Order will be sumbitted - ${price.USD} - ######################################`);
+                // after place order buy with current price
+                console.log(`${asset.symbol} - order finished - ${price.USD}`);
+                delete asset.buyThreshold;
+                asset.mode = "sell";
+              }
+              else if (price.USD <= newBuyThreshold && newBuyThreshold < assset.buyThreshold) {
+                asset.buyThreshold = newBuyThreshold;
+                console.log(`${asset.symbol} - New Buy threshold has been set - ${asset.buyThreshold}`);
+              }
+              else {
+                // DO Nothing 
+                console.log(`${asset.symbol} - price ${price.USD} still under current Threshold - ${asset.buyThreshold}`);
+              }
+            }
           }
         }
       })

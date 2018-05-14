@@ -15,7 +15,22 @@ const getPrice = (fromSymbol, toSymbol, exchange) => new Promise((resolve, rejec
         .catch(error => reject(error));
 });
 
+
+const calculateSellValue = (amount, percentage) => {
+  var num = amount - (amount * (percentage / 100));
+  num = num.toFixed(3);
+  return num;
+}
+
+const calculateBuyValue = (amount, percentage) => {
+  var num = amount - (amount * (percentage / 100));
+  num = num.toFixed(3);
+  return num;
+}
+
 module.exports = {
   histo,
   getPrice,
+  calculateSellValue,
+  calculateBuyValue
 };
