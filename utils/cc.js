@@ -23,7 +23,7 @@ const calculateSellValue = (amount, percentage) => {
 }
 
 const calculateBuyValue = (amount, percentage) => {
-  var num = amount - (amount * (percentage / 100));
+  var num = amount + (amount * (percentage / 100));
   num = num.toFixed(3);
   return num;
 }
