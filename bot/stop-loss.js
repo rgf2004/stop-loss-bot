@@ -1,3 +1,4 @@
+require('log-timestamp');
 const colors = require('colors');
 const config = require('../config');
 const cc = require('../utils/cc');
