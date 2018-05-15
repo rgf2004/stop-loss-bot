@@ -1,11 +1,10 @@
-require('log-timestamp');
-const colors = require('colors');
 const config = require('../config');
 const cc = require('../utils/cc');
 const kraken = require('../exchanges/kraken');
 const bittrex = require('../exchanges/bittrex');
 const email = require('../notifications/email');
 const telegram = require('../notifications/telegram');
+const logger = require('../utils/logger');
 const balance = null;
 
 const sendSellNotify = (symbol, price, amount) => {
@@ -110,20 +109,20 @@ const runBittrex = () => {
           if (!asset.mode || asset.mode === "sell") {
             asset.mode = "sell";
             if (!asset.sellThreshold) {
-              asset.sellThreshold = newSellThreshold;
-              console.log(`${asset.symbol} - First time checking stop loss threshold has been initialized - ${asset.sellThreshold}`.green);
+              asset.sellThreshold = newSellThreshold;            
+              logger.logInfoInGreen(`First time checking stop loss threshold has been initialized - ${asset.sellThreshold}`, asset.symbol);
             }
             else {
-              if (price.USD <= asset.sellThreshold) {
-                console.log(`${asset.symbol} - Sell Order will be sumbitted - ${price.USD} - ######################################`.inverse);
-                // after sell place order buy with current price
-                console.log(`${asset.symbol} - order finished - ${price.USD}`.rainbow);
+              if (price.USD <= asset.sellThreshold) {                
+                logger.logInfoInInverse(`Sell Order will be sumbitted - ${price.USD} - ######################################`, asset.symbol);
+                // after sell place order buy with current price                
+                logger.logInfoRainbow(`order finished - ${price.USD}`, asset.symbol);
                 delete asset.sellThreshold;
                 asset.mode = "buy";
               }
               else if (price.USD >= newSellThreshold && newSellThreshold > asset.sellThreshold) {
-                asset.sellThreshold = newSellThreshold;
-                console.log(`${asset.symbol} - New Stop loss threshold has been set - ${asset.sellThreshold}`.yellow);
+                asset.sellThreshold = newSellThreshold;                
+                logger.logInfoYellow(`New Stop loss threshold has been set - ${asset.sellThreshold}`, asset.symbol);
               }
               // else {
               //   // DO Nothing 
@@ -135,19 +134,19 @@ const runBittrex = () => {
             const newBuyThreshold = cc.calculateBuyValue(price.USD, asset.percentage); //price.USD - (price.USD * (asset.percentage / 100));
             if (!asset.buyThreshold) {
               asset.buyThreshold = newBuyThreshold;
-              console.log(`${asset.symbol} - First time checking buy threshold has been initialized - ${asset.buyThreshold}`.green);
+              logger.logInfoInGreen(`First time checking buy threshold has been initialized - ${asset.buyThreshold}`, asset.symbol);
             }
             else {
-              if (price.USD >= asset.buyThreshold) {
-                console.log(`${asset.symbol} - Buy Order will be sumbitted - ${price.USD} - ######################################`.inverse);
-                // after place order buy with current price
-                console.log(`${asset.symbol} - order finished - ${price.USD}`.rainbow);
+              if (price.USD >= asset.buyThreshold) {                
+                logger.logInfoInInverse(`Buy Order will be sumbitted - ${price.USD} - ######################################`, asset.symbol);
+                // after place order buy with current price              
+                logger.logInfoRainbow(`order finished - ${price.USD}`, asset.symbol);
                 delete asset.buyThreshold;
                 asset.mode = "sell";
               }
               else if (price.USD <= newBuyThreshold && newBuyThreshold < assset.buyThreshold) {
-                asset.buyThreshold = newBuyThreshold;
-                console.log(`${asset.symbol} - New Buy threshold has been set - ${asset.buyThreshold}`.yellow);
+                asset.buyThreshold = newBuyThreshold;                
+                logger.logInfoRainbow(`New Buy threshold has been set - ${asset.buyThreshold}`, asset.symbol);
               }
               // else {
               //   // DO Nothing 
@@ -157,7 +156,7 @@ const runBittrex = () => {
           }
         }
       })
-        .catch(error => console.log("Exception while getting price".red));
+        .catch(error => logger.logError('Exception while getting price'));
     });
   }
 }
@@ -168,5 +167,5 @@ const run = () => {
 };
 
 module.exports = {
-  run,
+  run
 };
