@@ -10,6 +10,7 @@
   },
   "license": "MIT",
   "dependencies": {
+    "colors": "^1.2.5",
     "dotenv": "^4.0.0",
     "kraken-api": "^1.0.0",
     "node-bittrex-api": "^0.8.3",
