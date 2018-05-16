@@ -65,6 +65,7 @@ const monitorAssetForSell = (price, asset) => {
             logger.logInfoInInverse(`Sell Order will be sumbitted - ${price} - ######################################`, asset.symbol);
             // after sell place order buy with current price                
             logger.logInfoRainbow(`order finished - ${price}`, asset.symbol);
+            cc.sendTelegramSellNotify(asset.symbol, price, asset.amount);
             delete asset.sellThreshold;
             asset.mode = "buy";
         }
@@ -87,6 +88,7 @@ const monitorAssetForBuy = (price, asset) => {
             logger.logInfoInInverse(`Buy Order will be sumbitted - ${price} - ######################################`, asset.symbol);
             // after place order buy with current price              
             logger.logInfoRainbow(`order finished - ${price}`, asset.symbol);
+            cc.sendTelegramBuyNotify(asset.symbol, price, asset.amount);
             delete asset.buyThreshold;
             asset.mode = "sell";
         }

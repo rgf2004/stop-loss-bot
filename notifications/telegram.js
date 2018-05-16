@@ -1,4 +1,5 @@
 const TelegramBot = require('node-telegram-bot-api');
+const logger = require('../utils/logger');
 
 // replace the value below with the Telegram token you receive from @BotFather
 const token = process.env.TelegramToken;
@@ -6,7 +7,8 @@ const chatId = process.env.chatId;
 
 // Create a bot that uses 'polling' to fetch new updates
 var bot;
-if (process.env.TelegramNotification === true) {
+
+ if (process.env.TelegramNotification === 'true') { 
   bot = new TelegramBot(token, { polling: true });
 
   // Matches "/echo [whatever]"
@@ -35,10 +37,11 @@ if (process.env.TelegramNotification === true) {
 
 
 const sendTelegramMessage = (msg) => {
+  logger.logInfoInGreen(`${msg} will be sent via telegram`);
   bot.sendMessage(chatId, msg);
 };
 
-module.exports
+module.exports =
 {
   sendTelegramMessage
-}
+};

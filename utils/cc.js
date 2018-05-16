@@ -1,4 +1,5 @@
 const fetch = require('node-fetch');
+const telegram = require('../notifications/telegram');
 
 const histo = (fromSymbol, toSymbol, limit = 3, aggregate = 1, period = 'minute') => new Promise((resolve, reject) => {
   fetch(`${process.env.CCApiURL}histo${period}?fsym=${fromSymbol}&tsym=${toSymbol}&limit=${limit}&aggregate=${aggregate}&e=Poloniex`)
@@ -28,9 +29,34 @@ const calculateBuyValue = (amount, percentage) => {
   return num;
 }
 
+
+const sendTelegramSellNotify = (symbol, price, amount) => {
+  if (process.env.TelegramNotification === 'true') {
+    telegram.sendTelegramMessage(`<p>Bot is going to sell</p>
+           <p>
+          Symbol:${symbol}<br/>
+          Amount:${amount}<br/>
+          Price:${price}<br/>
+          </p>`);
+  }
+};
+
+const sendTelegramBuyNotify = (symbol, price, amount) => {
+  if (process.env.TelegramNotification === 'true') {
+    telegram.sendTelegramMessage(`<p>Bot is going to buy</p>
+           <p>
+          Symbol:${symbol}<br/>
+          Amount:${amount}<br/>
+          Price:${price}<br/>
+          </p>`);
+  }
+};
+
 module.exports = {
   histo,
   getPrice,
   calculateSellValue,
-  calculateBuyValue
+  calculateBuyValue,
+  sendTelegramSellNotify,
+  sendTelegramBuyNotify
 };

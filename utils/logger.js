@@ -1,10 +1,11 @@
 require('log-timestamp');
 const colors = require('colors');
 
+//TODO need refactor to be one function with color parameter
 const logInfoInGreen = (msg, currency = '') => {
     var message ;
     if (currency !== '')
-        message = currency.padEnd(5) + ' - ' + msg;
+        message = currency.padEnd(10) + ' - ' + msg;
     else
         message = msg;
 
@@ -14,7 +15,7 @@ const logInfoInGreen = (msg, currency = '') => {
 const logInfoYellow = (msg, currency = '') => {
     var message ;
     if (currency !== '')
-        message = currency.padEnd(5) + ' - ' + msg;
+        message = currency.padEnd(10) + ' - ' + msg;
     else
         message = msg;
 
@@ -24,7 +25,7 @@ const logInfoYellow = (msg, currency = '') => {
 const logInfoRainbow = (msg, currency = '') => {
     var message ;
     if (currency !== '')
-        message = currency.padEnd(5) + ' - ' + msg;
+        message = currency.padEnd(10) + ' - ' + msg;
     else
         message = msg;
 
@@ -34,7 +35,7 @@ const logInfoRainbow = (msg, currency = '') => {
 const logInfoInInverse = (msg, currency = '') => {
     var message ;
     if (currency !== '')
-        message = currency.padEnd(5) + ' - ' + msg;
+        message = currency.padEnd(10) + ' - ' + msg;
     else
         message = msg;
 
