@@ -10,27 +10,27 @@ const config = {
       "enabled" : true,
       "assets" : [
         {
-          "symbol": "LTC",
+          "symbol": "USDT-LTC",
           "percentage": 5,
           "amount" : 1
         },
         {
-          "symbol": "DASH",
+          "symbol": "USDT-DASH",
           "percentage": 5,
           "amount" : 1
         },
         {
-          "symbol": "BTC",
+          "symbol": "USDT-BTC",
           "percentage": 5,
           "amount" : 1
         },
         {
-          "symbol": "ETH",
+          "symbol": "USDT-ETH",
           "percentage": 5,
           "amount" : 1
         },
         {
-          "symbol": "LSK",
+          "symbol": "USDT-ADA",
           "percentage": 5,
           "amount" : 1
         }

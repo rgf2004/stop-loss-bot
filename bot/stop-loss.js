@@ -98,11 +98,10 @@ const runKraken = () => {
 
 const runBittrex = () => {
   if (config.stoploss.bittrex.enabled === true) {
-    config.stoploss.bittrex.assets.map((asset) => {      
-      cc.getPrice(asset.symbol, 'USD', 'CCAGG').then((data) => {
-        // console.log(`${asset.symbol} - mode ${asset.mode} - current Price for : ${data.USD}`);
-        const price = data;
-        if (price.USD) {          
+    config.stoploss.bittrex.assets.map((asset) => {
+      bittrex.getTicker(asset.symbol).then((ticker) => {
+        if (ticker !== null) {
+          const price = ticker.result.Last;
           if (!asset.mode || asset.mode === "sell") {
             asset = bittrex.monitorAssetForSell(price, asset);
           }
@@ -111,7 +110,7 @@ const runBittrex = () => {
           }
         }
       })
-        .catch(error => logger.logError('Exception while getting price') ); // logger.logError('Exception while getting price')
+        .catch(error => console.log('Error ', asset.symbol ,error)); // logger.logError('Exception while getting price')
     });
   }
 }
