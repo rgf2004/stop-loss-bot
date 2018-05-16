@@ -22,6 +22,16 @@ const logInfoYellow = (msg, currency = '') => {
     console.log(message.yellow);
 };
 
+const logInfoBlue = (msg, currency = '') => {
+    var message ;
+    if (currency !== '')
+        message = currency.padEnd(10) + ' - ' + msg;
+    else
+        message = msg;
+
+    console.log(message.blue);
+};
+
 const logInfoRainbow = (msg, currency = '') => {
     var message ;
     if (currency !== '')
@@ -51,6 +61,7 @@ module.exports =
     logInfoInGreen,
     logInfoInInverse,
     logInfoYellow,
+    logInfoBlue,
     logInfoRainbow,
     logError
 };

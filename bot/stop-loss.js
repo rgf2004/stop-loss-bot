@@ -102,6 +102,7 @@ const runBittrex = () => {
       bittrex.getTicker(asset.symbol).then((ticker) => {
         if (ticker !== null) {
           const price = ticker.result.Last;
+          logger.logInfoBlue(`Checking Currency - current price ${price} - current mode ${asset.mode}`, asset.symbol);
           if (!asset.mode || asset.mode === "sell") {
             asset = bittrex.monitorAssetForSell(price, asset);
           }
