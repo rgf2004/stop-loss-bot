@@ -32,23 +32,19 @@ const calculateBuyValue = (amount, percentage) => {
 
 const sendTelegramSellNotify = (symbol, price, amount) => {
   if (process.env.TelegramNotification === 'true') {
-    telegram.sendTelegramMessage(`<p>Bot is going to sell</p>
-           <p>
-          Symbol:${symbol}<br/>
-          Amount:${amount}<br/>
-          Price:${price}<br/>
-          </p>`);
+    telegram.sendTelegramMessage(`Bot is going to sell           
+    Symbol:${symbol}
+    Amount:${amount}
+    Price:${price}`);
   }
 };
 
 const sendTelegramBuyNotify = (symbol, price, amount) => {
   if (process.env.TelegramNotification === 'true') {
-    telegram.sendTelegramMessage(`<p>Bot is going to buy</p>
-           <p>
-          Symbol:${symbol}<br/>
-          Amount:${amount}<br/>
-          Price:${price}<br/>
-          </p>`);
+    telegram.sendTelegramMessage(`Bot is going to buy           
+    Symbol:${symbol}
+    Amount:${amount}
+    Price:${price}`);
   }
 };
 
